@@ -8,7 +8,7 @@ type Contact struct {
 }
 
 type Pet struct {
-	ID       int     `json:"id" bson:"_id,omitempty"`
+	ID       any     `json:"id" bson:"_id,omitempty"`
 	Category string  `json:"category" bson:"category"`
 	Breed    string  `json:"bread" bson:"breed,omitempty"`
 	Age      int     `json:"age" bson:"age"`
@@ -19,15 +19,15 @@ type Pet struct {
 }
 
 type PetService interface {
-	Get(id int) (*Pet, error)
+	Get(id any) (*Pet, error)
 	List(query ...string) ([]*Pet, error)
 	Create(p *Pet) error
 	Delete(id int) error
 }
 
 type PetDB interface {
-	Get(id int) (*Pet, error)
+	Get(id any) (*Pet, error)
 	List(query ...string) ([]*Pet, error)
 	Create(p *Pet) error
-	Delete(id int) error
+	Delete(id any) error
 }
