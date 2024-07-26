@@ -6,7 +6,6 @@ import (
 	"os"
 
 	"github.com/Peter-Immanuel/fox-alpine/pkg/domain"
-	"github.com/ajclopez/mgs"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -44,19 +43,17 @@ func (ms mongoStore) convertID(id domain.PetID) string {
 	return petID
 }
 
-func (ms mongoStore) parseQuery(query string) *options.FindOptions {
-
-	queryHandler := mgs.NewQueryHandler(&Primitives{})
-	opts := mgs.FindOption()
-	result, _ := queryHandler.MongoGoSearch(query, opts)
-	findOpts := options.Find()
-	findOpts.SetLimit(result.Limit)
-	findOpts.SetSkip(result.Skip)
-	findOpts.SetSort(result.Sort)
-	findOpts.SetProjection(result.Projection)
-
-	return findOpts
-}
+// func (ms mongoStore) parseQuery(query string) *options.FindOptions {
+// 	queryHandler := mgs.NewQueryHandler(&Primitives{})
+// 	opts := mgs.FindOption()
+// 	result, _ := queryHandler.MongoGoSearch(query, opts)
+// 	findOpts := options.Find()
+// 	findOpts.SetLimit(result.Limit)
+// 	findOpts.SetSkip(result.Skip)
+// 	findOpts.SetSort(result.Sort)
+// 	findOpts.SetProjection(result.Projection)
+// 	return findOpts
+// }
 
 func (ms mongoStore) Get(id domain.PetID) (*domain.Pet, error) {
 	search_id, err := primitive.ObjectIDFromHex(ms.convertID(id))
@@ -102,6 +99,9 @@ func (ms mongoStore) Create(pet *domain.Pet) (*domain.Pet, error) {
 func (ms mongoStore) Delete(id domain.PetID) error {
 	objID := ms.convertID(id)
 	petId, err := primitive.ObjectIDFromHex(objID)
+	if err != nil {
+		log.Fatal(err.Error())
+	}
 	filter := bson.M{"_id": petId}
 	_, err = ms.Database.Collection("pets").DeleteOne(
 		context.TODO(),
