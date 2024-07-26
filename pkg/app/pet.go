@@ -6,24 +6,24 @@ type petService struct {
 	DB domain.PetDB
 }
 
-func NewPetService(db domain.PetDB) petService {
+func NewPetService(db domain.PetDB) domain.PetService {
 	return petService{
 		DB: db,
 	}
 }
 
-func (ps petService) Get(id int) (*domain.Pet, error) {
+func (ps petService) Get(id domain.PetID) (*domain.Pet, error) {
 	return ps.DB.Get(id)
 }
 
-func (ps petService) List(query ...string) ([]*domain.Pet, error) {
-	return ps.DB.List(query...)
+func (ps petService) List(category string) ([]*domain.Pet, error) {
+	return ps.DB.List(category)
 }
 
-func (ps petService) Create(pet *domain.Pet) error {
+func (ps petService) Create(pet *domain.Pet) (*domain.Pet, error) {
 	return ps.DB.Create(pet)
 }
 
-func (ps petService) Delete(id any) error {
+func (ps petService) Delete(id domain.PetID) error {
 	return ps.DB.Delete(id)
 }
